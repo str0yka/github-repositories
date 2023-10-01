@@ -1,0 +1,19 @@
+query Search(
+  $after: String
+  $before: String
+  $first: Int
+  $last: Int
+  $query: String!
+  $type: SearchType!
+) {
+  search(after: $after, before: $before, first: $first, last: $last, query: $query, type: $type) {
+    edges {
+      node {
+        ... on User {
+          id
+          name
+        }
+      }
+    }
+  }
+}

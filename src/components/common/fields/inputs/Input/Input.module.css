@@ -1,0 +1,49 @@
+.inputContainer {
+  display: flex;
+  align-items: center;
+  border: 1px var(--color-secondary-3) solid;
+  border-radius: 5px; 
+  cursor: text;
+  outline: 2px transparent solid;
+}
+
+.inputContainer:focus-within {
+  outline: 2px var(--color-primary-1) solid;
+  outline-offset: -1px;
+  transition: outline var(--transition-default) ease;
+}
+
+.input {
+  flex-grow: 1;
+  padding: 0 8px;
+  height: 32px;
+  font-size: 13px;
+  color: var(--color-text-1);
+  font-weight: 500;
+  cursor: inherit;
+}
+
+.input::placeholder {
+  user-select: none;
+}
+
+.indicatorContainer {
+  max-height: 32px;
+  margin-left: 8px;
+}
+
+.pushButtonContainer {
+  width: 18px;
+  height: 18px;
+  margin-right: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px var(--color-secondary-3) solid;
+  border-radius: 5px;
+  background-color: var(--color-background-3);
+}
+
+.pushButton {
+  font-size: 12px;
+}

@@ -1,0 +1,11 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: var(--font-inter);
+  color: var(--color-text-1);
+}
+
+body {
+  background-color: var(--color-background-2);
+}

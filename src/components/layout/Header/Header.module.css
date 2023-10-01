@@ -1,0 +1,11 @@
+.headerContainer {
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--color-background-1);
+}
+
+.inputContainer {
+  width: 350px;
+}
