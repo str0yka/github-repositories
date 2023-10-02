@@ -18,7 +18,7 @@ export const SearchBox = ({ onClose }: SearchBoxProps) => {
   const [value, setValue] = useState('');
 
   const { data } = useSearchQuery({
-    variables: { first: 50, query: value, type: SearchType.User }
+    variables: { first: 50, query: value, type: SearchType.User, size: 32 }
   });
 
   const searchBoxRef = useRef<HTMLDivElement>(null);
@@ -37,7 +37,7 @@ export const SearchBox = ({ onClose }: SearchBoxProps) => {
         ref={searchBoxRef}
         className={s.searchBoxContainer}
       >
-        <div className={s.inputContainer}>
+        <SearchBox.Group>
           <Input
             ref={inputRef}
             label='Search something...'
@@ -47,7 +47,7 @@ export const SearchBox = ({ onClose }: SearchBoxProps) => {
             value={value}
             onChange={(event) => setValue(event.target.value)}
           />
-        </div>
+        </SearchBox.Group>
         <div className={s.listContainer}>
           <SearchBox.Group>
             {!data?.search.edges?.length && (
@@ -63,14 +63,15 @@ export const SearchBox = ({ onClose }: SearchBoxProps) => {
             <SearchBox.Group>
               <SearchBox.GroupTitle>Users</SearchBox.GroupTitle>
               <SearchBox.GroupList>
-                {data.search.edges?.map((user) => {
-                  if (user.node?.__typename !== 'User') return;
+                {data.search.edges?.map((egde) => {
+                  if (egde.node?.__typename !== 'User') return;
 
                   return (
                     <SearchBox.GroupItem
-                      avatarUrl={user.node.avatarUrl as string}
-                      login={user.node.login}
-                      name={user.node.name}
+                      key={egde.node.id}
+                      avatarUrl={egde.node.avatarUrl as string}
+                      login={egde.node.login}
+                      name={egde.node.name}
                     />
                   );
                 })}
