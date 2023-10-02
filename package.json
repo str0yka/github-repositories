@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "generate-gql": "graphql-codegen -r dotenv/config --config ./src/graphql/codegen.yml && prettier --write ./src/graphql/requests/__generated__.ts"
+    "generate-gql-requests": "graphql-codegen -r dotenv/config --config ./src/graphql/requests/codegen.yml && prettier --write ./src/graphql/requests/__generated__.ts",
+    "generate-gql-hooks": "graphql-codegen -r dotenv/config --config ./src/graphql/hooks/codegen.yml && prettier --write ./src/graphql/hooks/__generated__.ts"
   },
   "dependencies": {
     "@apollo/client": "^3.8.4",
@@ -23,7 +24,7 @@
     "@graphql-codegen/cli": "^5.0.0",
     "@graphql-codegen/client-preset": "^4.1.0",
     "@graphql-codegen/typescript": "^4.0.1",
-    "@graphql-codegen/typescript-graphql-request": "^6.0.0",
+    "@graphql-codegen/typescript-graphql-request": "^5.0.0",
     "@graphql-codegen/typescript-operations": "^4.0.1",
     "@graphql-codegen/typescript-react-apollo": "^4.0.0",
     "@typescript-eslint/eslint-plugin": "^6.0.0",

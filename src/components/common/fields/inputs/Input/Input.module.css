@@ -1,6 +1,7 @@
 .inputContainer {
   display: flex;
   align-items: center;
+  background-color: var(--color-background-1);
   border: 1px var(--color-secondary-3) solid;
   border-radius: 5px; 
   cursor: text;
@@ -8,9 +9,10 @@
 }
 
 .inputContainer:focus-within {
+  background-color: var(--color-background-2);
   outline: 2px var(--color-primary-1) solid;
   outline-offset: -1px;
-  transition: outline var(--transition-default) ease;
+  transition: outline var(--transition-default) ease, background-color var(--transition-default) ease;
 }
 
 .input {
@@ -28,6 +30,9 @@
 }
 
 .indicatorContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   max-height: 32px;
   margin-left: 8px;
 }

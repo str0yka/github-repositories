@@ -2,7 +2,7 @@ overwrite: true
 schema:
   - https://api.github.com/graphql:
       headers:
-        User-Agent: debabin
+        User-Agent: ${GITHUB_USER_AGENT}
         Authorization: 'Bearer ${GITHUB_PERSONAL_TOKEN}'
 documents: './src/graphql/documents/**/*.gql'
 generates:

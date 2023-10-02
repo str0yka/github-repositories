@@ -8,6 +8,7 @@ import '~static/styles/global.css';
 import '~static/styles/reset.css';
 import '~static/styles/variables/colors.css';
 import '~static/styles/variables/transition.css';
+import { Provider } from './provider';
 
 export const metadata: Metadata = {
   title: 'GitHub Repositories',
@@ -19,10 +20,14 @@ interface RootLayoutProps {
 }
 
 const RootLayout: React.FC<RootLayoutProps> = ({ children }) => (
-  <body className={cn(inter.variable, 'dark')}>
-    <Header />
-    {children}
-  </body>
+  <html lang='en'>
+    <Provider>
+      <body className={cn(inter.variable, 'dark')}>
+        <Header />
+        {children}
+      </body>
+    </Provider>
+  </html>
 );
 
 export default RootLayout;

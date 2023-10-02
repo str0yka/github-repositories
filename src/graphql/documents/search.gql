@@ -5,13 +5,20 @@ query Search(
   $last: Int
   $query: String!
   $type: SearchType!
+  $size: Int
 ) {
   search(after: $after, before: $before, first: $first, last: $last, query: $query, type: $type) {
     edges {
       node {
         ... on User {
           id
+          login
           name
+          avatarUrl(size: $size)
+          status {
+            emoji
+            message
+          }
         }
       }
     }

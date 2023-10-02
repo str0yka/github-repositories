@@ -1,11 +1,37 @@
 .headerContainer {
-  padding: 10px;
+  padding: 15px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   background-color: var(--color-background-1);
+  border-bottom: 1px var(--color-secondary-1) solid;
+}
+
+.headerGroupContainer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .inputContainer {
   width: 350px;
+}
+
+.buttonInnerContainer {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.buttonInnerGroupContainer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.buttonInnerConsoleIcon {
+  box-sizing: content-box;
+  padding-left: 8px;
+  border-left: 1px var(--color-secondary-3) solid;
 }

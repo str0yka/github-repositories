@@ -1,6 +1,8 @@
 'use client';
 
-import { forwardRef, useId, useEffect, useRef } from 'react';
+import { forwardRef, useId, useRef } from 'react';
+
+import { useOnClickKey } from '~utils/hooks';
 
 import s from './Input.module.css';
 
@@ -9,28 +11,21 @@ interface InputProps
   label: string;
   leftIndicator?: React.ReactNode;
   pushButton?: string;
+  pushButtonKey?: string;
 }
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ label, leftIndicator, pushButton, ...props }, ref) => {
+  ({ label, leftIndicator, pushButton, pushButtonKey, ...props }, ref) => {
     const id = useId();
     const labelRef = useRef<HTMLLabelElement>(null);
 
-    useEffect(() => {
-      const listener = () => {
-        labelRef.current?.focus();
-      };
-
-      window.addEventListener('keydown', listener);
-
-      return () => {
-        window.removeEventListener('keydown', listener);
-      };
-    }, []);
+    useOnClickKey(
+      (event) => event.code === pushButtonKey && setTimeout(() => labelRef.current?.focus(), 0)
+    );
 
     return (
       <label
-        ref={label}
+        ref={labelRef}
         className={s.inputContainer}
         htmlFor={id}
       >

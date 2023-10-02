@@ -1,9 +1,22 @@
 'use client';
 
-import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
+import { ApolloClient, InMemoryCache, ApolloProvider, createHttpLink } from '@apollo/client';
+import { setContext } from '@apollo/client/link/context';
+
+const httpLink = createHttpLink({
+  uri: 'https://api.github.com/graphql'
+});
+
+const authLink = setContext((_, { headers }) => ({
+  headers: {
+    ...headers,
+    'User-Agent': process.env.NEXT_PUBLIC_GITHUB_USER_AGEN,
+    authorization: `Bearer ${process.env.NEXT_PUBLIC_GITHUB_PERSONAL_TOKEN ?? ''}`
+  }
+}));
 
 const client = new ApolloClient({
-  uri: 'https://api.github.com/graphql',
+  link: authLink.concat(httpLink),
   cache: new InMemoryCache()
 });
 
