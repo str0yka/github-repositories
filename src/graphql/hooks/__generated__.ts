@@ -23777,7 +23777,7 @@ export enum SponsorsCountryOrRegionCode {
   Tn = 'TN',
   /** Tonga */
   To = 'TO',
-  /** Turkey */
+  /** Türkiye */
   Tr = 'TR',
   /** Trinidad and Tobago */
   Tt = 'TT',
@@ -28638,6 +28638,43 @@ export enum WorkflowState {
   DisabledManually = 'DISABLED_MANUALLY'
 }
 
+export type ProfileQueryVariables = Exact<{
+  login: Scalars['String']['input'];
+  socialFirst: Scalars['Int']['input'];
+}>;
+
+export type ProfileQuery = {
+  readonly __typename?: 'Query';
+  readonly user?: {
+    readonly __typename?: 'User';
+    readonly id: string;
+    readonly login: string;
+    readonly name?: string;
+    readonly avatarUrl: any;
+    readonly company?: string;
+    readonly location?: string;
+    readonly url: any;
+    readonly followers: { readonly __typename?: 'FollowerConnection'; readonly totalCount: number };
+    readonly following: {
+      readonly __typename?: 'FollowingConnection';
+      readonly totalCount: number;
+    };
+    readonly socialAccounts: {
+      readonly __typename?: 'SocialAccountConnection';
+      readonly totalCount: number;
+      readonly edges?: ReadonlyArray<{
+        readonly __typename?: 'SocialAccountEdge';
+        readonly node?: {
+          readonly __typename?: 'SocialAccount';
+          readonly provider: SocialAccountProvider;
+          readonly displayName: string;
+          readonly url: any;
+        };
+      }>;
+    };
+  };
+};
+
 export type SearchQueryVariables = Exact<{
   after?: InputMaybe<Scalars['String']['input']>;
   before?: InputMaybe<Scalars['String']['input']>;
@@ -28679,6 +28716,68 @@ export type SearchQuery = {
   };
 };
 
+export const ProfileDocument = gql`
+  query Profile($login: String!, $socialFirst: Int!) {
+    user(login: $login) {
+      id
+      login
+      name
+      avatarUrl
+      company
+      location
+      url
+      followers {
+        totalCount
+      }
+      following {
+        totalCount
+      }
+      socialAccounts(first: $socialFirst) {
+        totalCount
+        edges {
+          node {
+            provider
+            displayName
+            url
+          }
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useProfileQuery__
+ *
+ * To run a query within a React component, call `useProfileQuery` and pass it any options that fit your needs.
+ * When your component renders, `useProfileQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useProfileQuery({
+ *   variables: {
+ *      login: // value for 'login'
+ *      socialFirst: // value for 'socialFirst'
+ *   },
+ * });
+ */
+export function useProfileQuery(
+  baseOptions: Apollo.QueryHookOptions<ProfileQuery, ProfileQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<ProfileQuery, ProfileQueryVariables>(ProfileDocument, options);
+}
+export function useProfileLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<ProfileQuery, ProfileQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<ProfileQuery, ProfileQueryVariables>(ProfileDocument, options);
+}
+export type ProfileQueryHookResult = ReturnType<typeof useProfileQuery>;
+export type ProfileLazyQueryHookResult = ReturnType<typeof useProfileLazyQuery>;
+export type ProfileQueryResult = Apollo.QueryResult<ProfileQuery, ProfileQueryVariables>;
 export const SearchDocument = gql`
   query Search(
     $after: String

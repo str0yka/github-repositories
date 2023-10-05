@@ -23777,7 +23777,7 @@ export enum SponsorsCountryOrRegionCode {
   Tn = 'TN',
   /** Tonga */
   To = 'TO',
-  /** Turkey */
+  /** Türkiye */
   Tr = 'TR',
   /** Trinidad and Tobago */
   Tt = 'TT',
@@ -28638,6 +28638,43 @@ export enum WorkflowState {
   DisabledManually = 'DISABLED_MANUALLY'
 }
 
+export type ProfileQueryVariables = Exact<{
+  login: Scalars['String']['input'];
+  socialFirst: Scalars['Int']['input'];
+}>;
+
+export type ProfileQuery = {
+  readonly __typename?: 'Query';
+  readonly user?: {
+    readonly __typename?: 'User';
+    readonly id: string;
+    readonly login: string;
+    readonly name?: string;
+    readonly avatarUrl: any;
+    readonly company?: string;
+    readonly location?: string;
+    readonly url: any;
+    readonly followers: { readonly __typename?: 'FollowerConnection'; readonly totalCount: number };
+    readonly following: {
+      readonly __typename?: 'FollowingConnection';
+      readonly totalCount: number;
+    };
+    readonly socialAccounts: {
+      readonly __typename?: 'SocialAccountConnection';
+      readonly totalCount: number;
+      readonly edges?: ReadonlyArray<{
+        readonly __typename?: 'SocialAccountEdge';
+        readonly node?: {
+          readonly __typename?: 'SocialAccount';
+          readonly provider: SocialAccountProvider;
+          readonly displayName: string;
+          readonly url: any;
+        };
+      }>;
+    };
+  };
+};
+
 export type SearchQueryVariables = Exact<{
   after?: InputMaybe<Scalars['String']['input']>;
   before?: InputMaybe<Scalars['String']['input']>;
@@ -28679,6 +28716,35 @@ export type SearchQuery = {
   };
 };
 
+export const ProfileDocument = gql`
+  query Profile($login: String!, $socialFirst: Int!) {
+    user(login: $login) {
+      id
+      login
+      name
+      avatarUrl
+      company
+      location
+      url
+      followers {
+        totalCount
+      }
+      following {
+        totalCount
+      }
+      socialAccounts(first: $socialFirst) {
+        totalCount
+        edges {
+          node {
+            provider
+            displayName
+            url
+          }
+        }
+      }
+    }
+  }
+`;
 export const SearchDocument = gql`
   query Search(
     $after: String
@@ -28719,6 +28785,20 @@ const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationTy
 
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
+    Profile(
+      variables: ProfileQueryVariables,
+      requestHeaders?: GraphQLClientRequestHeaders
+    ): Promise<ProfileQuery> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<ProfileQuery>(ProfileDocument, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders
+          }),
+        'Profile',
+        'query'
+      );
+    },
     Search(
       variables: SearchQueryVariables,
       requestHeaders?: GraphQLClientRequestHeaders

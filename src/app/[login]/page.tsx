@@ -1,3 +1,7 @@
+import { Flex, Menu } from '~components/ui';
+
+import { Profile } from './_sections';
+
 interface ProfilePageProps {
   params: {
     login: string;
@@ -8,24 +12,27 @@ interface ProfilePageProps {
 }
 
 const Repositories = () => <h1>repositories</h1>;
-const Profile = () => <h1>profile</h1>;
+const Test = () => <Menu>menu</Menu>;
 
 const withTabQuery = (tab?: string) => {
-  if (!tab) return Profile;
+  if (!tab) return Test;
   if (tab === 'repositories') return Repositories;
   return () => null;
 };
 
 const ProfilePage: React.FC<ProfilePageProps> = ({ params, searchParams }) => {
-  const Content = withTabQuery(searchParams?.tab);
+  const Content = withTabQuery(searchParams.tab);
 
   return (
-    <div>
-      {params.login}
+    <Flex
+      ai='flex-start'
+      g={24}
+    >
+      <Profile login={params.login} />
       <div>
-        page <Content />
+        <Content />
       </div>
-    </div>
+    </Flex>
   );
 };
 

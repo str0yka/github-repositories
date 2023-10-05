@@ -1,0 +1,19 @@
+.userName {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.userLogin {
+  color: var(--color-text-2);
+  font-weight: 300;
+}
+
+.contentContainer {
+  flex-grow: 1;
+}
+
+.userInfoIcon {
+  width: 18px;
+  height: 18px;
+  fill: var(--color-secondary-3)
+}

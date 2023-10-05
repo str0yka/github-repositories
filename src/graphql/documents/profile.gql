@@ -1,0 +1,27 @@
+query Profile($login: String!, $socialFirst: Int!) {
+  user(login: $login) {
+    id
+    login
+    name
+    avatarUrl
+    company
+    location
+    url
+    followers {
+      totalCount
+    }
+    following {
+      totalCount
+    }
+    socialAccounts(first: $socialFirst) {
+      totalCount
+      edges {
+        node {
+          provider
+          displayName
+          url
+        }
+      }
+    }
+  }
+}

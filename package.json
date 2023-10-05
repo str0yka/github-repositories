@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "generate-gql-requests": "graphql-codegen -r dotenv/config --config ./src/graphql/requests/codegen.yml && prettier --write ./src/graphql/requests/__generated__.ts",
-    "generate-gql-hooks": "graphql-codegen -r dotenv/config --config ./src/graphql/hooks/codegen.yml && prettier --write ./src/graphql/hooks/__generated__.ts"
+    "generate-gql-hooks": "graphql-codegen -r dotenv/config --config ./src/graphql/hooks/codegen.yml && prettier --write ./src/graphql/hooks/__generated__.ts",
+    "generate-gql": "npm run generate-gql-requests && npm run generate-gql-hooks"
   },
   "dependencies": {
     "@apollo/client": "^3.8.4",
@@ -30,6 +31,7 @@
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
     "dotenv": "^16.3.1",
+    "encoding": "^0.1.13",
     "eslint": "^8.50.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-typescript": "^17.1.0",

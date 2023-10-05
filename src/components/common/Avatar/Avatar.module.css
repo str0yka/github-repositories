@@ -1,4 +1,5 @@
 .avatar {
   object-fit: cover;
   border-radius: 50%;
+  border: 1px var(--color-secondary-3) solid;
 }

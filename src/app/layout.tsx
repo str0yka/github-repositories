@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 
-import { Header } from '~components/layout';
+import { Header, Main } from '~components/layout';
 import { inter } from '~static/fonts';
 import { cn } from '~utils/helpers';
 
@@ -22,10 +22,10 @@ interface RootLayoutProps {
 const RootLayout: React.FC<RootLayoutProps> = ({ children }) => (
   <html lang='en'>
     <Provider>
-      <body className={cn(inter.variable, 'dark')}>
+      <body className={cn(inter.variable, 'light')}>
         <div id='modalContainer' />
         <Header />
-        {children}
+        <Main>{children}</Main>
       </body>
     </Provider>
   </html>
