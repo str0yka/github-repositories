@@ -1,0 +1,11 @@
+.groupContainer {
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-top: 1px var(--color-secondary-3) solid;
+}
+
+.groupContainer:first-child {
+  border-top: none;
+}

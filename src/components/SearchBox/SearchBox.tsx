@@ -1,111 +1,123 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
-import { Input } from '~components/ui';
+import { Avatar, Input, Menu } from '~components/ui';
 import { MagnifierIcon } from '~components/ui/icons';
 import { useSearchQuery, SearchType } from '~graphql';
-import { useOnClickKey, useOnClickOutside } from '~utils/hooks';
+import { ROUTES } from '~utils/constants';
 
 import s from './SearchBox.module.css';
-import { SearchBoxItem } from './components';
 
 interface SearchBoxProps {
   onClose: () => void;
 }
 
 export const SearchBox = ({ onClose }: SearchBoxProps) => {
+  const router = useRouter();
   const [value, setValue] = useState('');
 
-  const { data } = useSearchQuery({
+  const { data, loading } = useSearchQuery({
     variables: { first: 50, query: value, type: SearchType.User, size: 32 }
   });
 
-  const searchBoxRef = useRef<HTMLDivElement>(null);
+  const users = data?.search.edges;
+  const userCount = data?.search.userCount;
+
+  const overlayRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     inputRef.current?.focus();
+
+    const onClickOverlay = (event: MouseEvent) => {
+      if (event.target === overlayRef.current) {
+        onClose();
+      }
+    };
+
+    const onClickEscape = (event: KeyboardEvent) => {
+      if (event.code === 'Escape') {
+        const isInputFocused = document.activeElement === inputRef.current;
+
+        if (isInputFocused) {
+          return inputRef.current?.blur();
+        }
+
+        return onClose();
+      }
+    };
+
+    overlayRef.current?.addEventListener('click', onClickOverlay);
+    window.addEventListener('keydown', onClickEscape);
+
+    return () => {
+      overlayRef.current?.removeEventListener('click', onClickOverlay);
+      window.removeEventListener('keydown', onClickEscape);
+    };
   }, []);
 
-  useOnClickOutside(searchBoxRef, onClose);
-  useOnClickKey((event) => event.code === 'Escape' && onClose());
-
   return (
-    <div className={s.overlay}>
-      <div
-        ref={searchBoxRef}
-        className={s.searchBoxContainer}
-      >
-        <SearchBox.Group>
-          <Input
-            ref={inputRef}
-            label='Search something...'
-            leftIndicator={<MagnifierIcon />}
-            pushButton='/'
-            pushButtonKey='Slash'
-            value={value}
-            onChange={(event) => setValue(event.target.value)}
-          />
-        </SearchBox.Group>
-        <div className={s.listContainer}>
-          <SearchBox.Group>
-            {!data?.search.edges?.length && (
-              <SearchBox.GroupTitle>No results found</SearchBox.GroupTitle>
-            )}
-            {!!data?.search.edges?.length && (
-              <SearchBox.GroupTitle>
-                Found {data?.search.edges?.length} results
-              </SearchBox.GroupTitle>
-            )}
-          </SearchBox.Group>
-          {!!data?.search.edges?.length && (
-            <SearchBox.Group>
-              <SearchBox.GroupTitle>Users</SearchBox.GroupTitle>
-              <SearchBox.GroupList>
-                {data.search.edges?.map((egde) => {
-                  if (egde.node?.__typename !== 'User') return;
+    <div
+      ref={overlayRef}
+      className={s.overlay}
+    >
+      <div className={s.searchBoxContainer}>
+        <Menu>
+          <Menu.Group>
+            <Input
+              ref={inputRef}
+              label='Search something...'
+              leftIndicator={<MagnifierIcon />}
+              pushButton='/'
+              pushButtonKey='Slash'
+              value={value}
+              onChange={(event) => setValue(event.target.value)}
+            />
+          </Menu.Group>
+          <div className={s.listContainer}>
+            <Menu.Group>
+              {loading && <Menu.GroupTitle>Loading...</Menu.GroupTitle>}
+              {!loading && !userCount && <Menu.GroupTitle>No results found</Menu.GroupTitle>}
+              {!loading && !!userCount && (
+                <Menu.GroupTitle>Found {userCount} results</Menu.GroupTitle>
+              )}
+            </Menu.Group>
+            {!!users?.length && (
+              <Menu.Group>
+                <Menu.GroupTitle>Users</Menu.GroupTitle>
+                {users?.map((user) => {
+                  const u = user.node; // for typescript
+                  if (u?.__typename !== 'User') return;
 
                   return (
-                    <SearchBox.GroupItem
-                      key={egde.node.id}
-                      avatarUrl={egde.node.avatarUrl as string}
-                      login={egde.node.login}
-                      name={egde.node.name}
-                    />
+                    <div
+                      key={u.id}
+                      aria-hidden='true'
+                      className={s.itemContainer}
+                      onClick={() => {
+                        router.push(ROUTES.PROFILE(u.login));
+                        onClose();
+                      }}
+                    >
+                      <Avatar
+                        alt={`${u.login}'s avatar`}
+                        avatarUrl={u.avatarUrl}
+                        size={32}
+                      />
+                      <div className={s.itemInfoContainer}>
+                        <span className={s.itemLogin}>{u.login}</span>
+                        {u.name && <span className={s.itemName}>{u.name}</span>}
+                      </div>
+                    </div>
                   );
                 })}
-              </SearchBox.GroupList>
-            </SearchBox.Group>
-          )}
-        </div>
+              </Menu.Group>
+            )}
+          </div>
+        </Menu>
       </div>
     </div>
   );
 };
-
-interface SearchBoxGroupProps {
-  children: React.ReactNode;
-}
-
-SearchBox.Group = ({ children }: SearchBoxGroupProps) => (
-  <div className={s.groupContainer}>{children}</div>
-);
-
-interface SearchBoxGroupTitleProps {
-  children: React.ReactNode;
-}
-
-SearchBox.GroupTitle = ({ children }: SearchBoxGroupTitleProps) => (
-  <h3 className={s.groupTitle}>{children}</h3>
-);
-
-interface SearchBoxGroupListProps {
-  children: React.ReactNode;
-}
-
-SearchBox.GroupList = ({ children }: SearchBoxGroupListProps) => (
-  <div className={s.groupListContainer}>{children}</div>
-);
-
-SearchBox.GroupItem = SearchBoxItem;

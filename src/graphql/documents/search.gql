@@ -8,6 +8,7 @@ query Search(
   $size: Int
 ) {
   search(after: $after, before: $before, first: $first, last: $last, query: $query, type: $type) {
+    userCount
     edges {
       node {
         ... on User {

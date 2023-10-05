@@ -1,0 +1,6 @@
+.menuContainer {
+  background-color: var(--color-background-2);
+  border: 1px var(--color-secondary-3) solid;
+  border-radius: 10px;
+  overflow: hidden;
+}

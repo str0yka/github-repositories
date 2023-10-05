@@ -18,7 +18,7 @@ export const Header = () => {
       {isSearchBoxOpen && <SearchBox onClose={() => setIsSearchBoxOpen(false)} />}
       <div className={s.headerGroupContainer}>
         <Link href={ROUTES.HOME}>
-          <GitHubIcon />
+          <GitHubIcon className={s.logoIcon} />
         </Link>
         <Link href={ROUTES.HOME}>
           <Button variant='transparented'>Repositories</Button>
@@ -26,12 +26,6 @@ export const Header = () => {
       </div>
       <div className={s.headerGroupContainer}>
         <div className={s.inputContainer}>
-          {/* <Input
-          label='Type something...'
-          leftIndicator={<MagnifierIcon />}
-          pushButton='/'
-          pushButtonKey='Slash'
-        /> */}
           <Button
             pushButtonKey='Slash'
             variant='outlined'

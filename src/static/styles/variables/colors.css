@@ -10,3 +10,18 @@ body.dark {
   --color-text-2: #8B949E;
   --color-text-1: #E6EDF3;
 }
+
+body.light {
+  --color-background-1: #F6F8FA;
+  --color-background-2: #FFF;
+  --color-background-3: #EAEDF1;
+  --color-background-4: #E4E8EC;
+  --color-primary-1: #2F81F7;
+  --color-secondary-1: #EBECF0;
+  --color-secondary-2: #E9ECEF;
+  --color-secondary-3: #D0D7DE;
+  --color-text-2: #6E7781;
+  --color-text-1: #1F2328;
+}
+
+

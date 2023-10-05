@@ -7,6 +7,10 @@
   border-bottom: 1px var(--color-secondary-1) solid;
 }
 
+.logoIcon path {
+  fill: var(--color-text-1);
+}
+
 .headerGroupContainer {
   display: flex;
   align-items: center;

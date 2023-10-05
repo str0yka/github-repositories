@@ -1,0 +1,19 @@
+.toggleContainer {
+  position: relative;
+  height: 24px;
+  width: 48px;
+  border-radius: 12px;
+  background-color: var(--color-background-1);
+  border: 1px var(--color-secondary-3) solid;
+}
+
+.toggle {
+  position: absolute;
+  top: 50%;
+  left: 3px;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: var(--color-secondary-1);
+}

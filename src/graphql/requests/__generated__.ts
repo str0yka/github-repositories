@@ -28652,6 +28652,7 @@ export type SearchQuery = {
   readonly __typename?: 'Query';
   readonly search: {
     readonly __typename?: 'SearchResultItemConnection';
+    readonly userCount: number;
     readonly edges?: ReadonlyArray<{
       readonly __typename?: 'SearchResultItemEdge';
       readonly node?:
@@ -28689,6 +28690,7 @@ export const SearchDocument = gql`
     $size: Int
   ) {
     search(after: $after, before: $before, first: $first, last: $last, query: $query, type: $type) {
+      userCount
       edges {
         node {
           ... on User {
