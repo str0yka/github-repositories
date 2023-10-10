@@ -1,8 +1,6 @@
 import { Suspense } from 'react';
 
-import { Input, Menu, Skeleton } from '~components/ui';
-
-import { Profile, ProfileSkeleton } from './_sections';
+import { Profile, ProfileSkeleton, Repositories } from './_sections';
 import s from './page.module.css';
 
 interface ProfilePageProps {
@@ -14,32 +12,8 @@ interface ProfilePageProps {
   };
 }
 
-const Repositories = () => (
-  <Menu>
-    <Menu.Group>
-      <Input label='Find repository' />
-    </Menu.Group>
-    <Menu.Group>
-      <Input label='Find repository' />
-    </Menu.Group>
-    <Menu.Group>
-      <Input label='Find repository' />
-    </Menu.Group>
-    <Menu.Group>
-      <Input label='Find repository' />
-    </Menu.Group>
-  </Menu>
-);
-const Test = () => (
-  <Menu>
-    <div className={s.skeletonContainer}>
-      <Skeleton />
-    </div>
-  </Menu>
-);
-
 const withTabQuery = (tab?: string) => {
-  if (!tab) return Test;
+  if (!tab) return Repositories;
   if (tab === 'repositories') return Repositories;
   return () => null;
 };
@@ -55,7 +29,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ params, searchParams }) => {
         </Suspense>
       </div>
       <div className={s.contentContainer}>
-        <Content />
+        <Content login={params.login} />
       </div>
     </div>
   );

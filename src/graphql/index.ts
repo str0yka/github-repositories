@@ -10,4 +10,10 @@ const client = new GraphQLClient('https://api.github.com/graphql', {
 
 export const gql = getSdk(client);
 
-export { useSearchQuery, SearchType, SocialAccountProvider } from './hooks/__generated__';
+export {
+  useSearchQuery,
+  SearchType,
+  SocialAccountProvider,
+  RepositoryOrderField,
+  OrderDirection
+} from './hooks/__generated__';

@@ -4930,6 +4930,8 @@ export type DeploymentProtectionRule = {
   readonly __typename?: 'DeploymentProtectionRule';
   /** Identifies the primary key from the database. */
   readonly databaseId?: Maybe<Scalars['Int']['output']>;
+  /** Whether deployments to this environment can be approved by the user who created the deployment. */
+  readonly preventSelfReview?: Maybe<Scalars['Boolean']['output']>;
   /** The teams or users that can review the deployment */
   readonly reviewers: DeploymentReviewerConnection;
   /** The timeout in minutes for this protection rule. */
@@ -21623,6 +21625,8 @@ export type RepositoryRuleInput = {
 
 /** The rule types supported in rulesets */
 export enum RepositoryRuleType {
+  /** Authorization */
+  Authorization = 'AUTHORIZATION',
   /** Branch name pattern */
   BranchNamePattern = 'BRANCH_NAME_PATTERN',
   /** Committer email pattern */
@@ -21635,6 +21639,16 @@ export enum RepositoryRuleType {
   Creation = 'CREATION',
   /** Only allow users with bypass permissions to delete matching refs. */
   Deletion = 'DELETION',
+  /** File path pattern */
+  FilePathPattern = 'FILE_PATH_PATTERN',
+  /** Branch is read-only. Users cannot push to the branch. */
+  LockBranch = 'LOCK_BRANCH',
+  /** Max ref updates */
+  MaxRefUpdates = 'MAX_REF_UPDATES',
+  /** Merges must be performed via a merge queue. */
+  MergeQueue = 'MERGE_QUEUE',
+  /** Merge queue locked ref */
+  MergeQueueLockedRef = 'MERGE_QUEUE_LOCKED_REF',
   /** Prevent users with push access from force pushing to refs. */
   NonFastForward = 'NON_FAST_FORWARD',
   /** Require all commits be made to a non-target branch and submitted via a pull request before they can be merged. */
@@ -21643,14 +21657,26 @@ export enum RepositoryRuleType {
   RequiredDeployments = 'REQUIRED_DEPLOYMENTS',
   /** Prevent merge commits from being pushed to matching refs. */
   RequiredLinearHistory = 'REQUIRED_LINEAR_HISTORY',
+  /** When enabled, all conversations on code must be resolved before a pull request can be merged into a branch that matches this rule. */
+  RequiredReviewThreadResolution = 'REQUIRED_REVIEW_THREAD_RESOLUTION',
   /** Commits pushed to matching refs must have verified signatures. */
   RequiredSignatures = 'REQUIRED_SIGNATURES',
   /** Choose which status checks must pass before branches can be merged into a branch that matches this rule. When enabled, commits must first be pushed to another branch, then merged or pushed directly to a ref that matches this rule after status checks have passed. */
   RequiredStatusChecks = 'REQUIRED_STATUS_CHECKS',
+  /** Require all commits be made to a non-target branch and submitted via a pull request and required workflow checks to pass before they can be merged. */
+  RequiredWorkflowStatusChecks = 'REQUIRED_WORKFLOW_STATUS_CHECKS',
+  /** Commits pushed to matching refs must have verified signatures. */
+  RulesetRequiredSignatures = 'RULESET_REQUIRED_SIGNATURES',
+  /** Secret scanning */
+  SecretScanning = 'SECRET_SCANNING',
+  /** Tag */
+  Tag = 'TAG',
   /** Tag name pattern */
   TagNamePattern = 'TAG_NAME_PATTERN',
   /** Only allow users with bypass permission to update matching refs. */
-  Update = 'UPDATE'
+  Update = 'UPDATE',
+  /** Workflow files cannot be modified. */
+  WorkflowUpdates = 'WORKFLOW_UPDATES'
 }
 
 /** A repository ruleset. */
@@ -26866,6 +26892,8 @@ export type UpdateEnvironmentInput = {
   readonly clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The node ID of the environment. */
   readonly environmentId: Scalars['ID']['input'];
+  /** Whether deployments to this environment can be approved by the user who created the deployment. */
+  readonly preventSelfReview?: InputMaybe<Scalars['Boolean']['input']>;
   /** The ids of users or teams that can approve deployments to this environment */
   readonly reviewers?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
   /** The wait timer in minutes. */
@@ -28675,6 +28703,47 @@ export type ProfileQuery = {
   };
 };
 
+export type RepositoriesQueryVariables = Exact<{
+  login: Scalars['String']['input'];
+  first: Scalars['Int']['input'];
+  orderBy: RepositoryOrder;
+}>;
+
+export type RepositoriesQuery = {
+  readonly __typename?: 'Query';
+  readonly user?: {
+    readonly __typename?: 'User';
+    readonly repositories: {
+      readonly __typename?: 'RepositoryConnection';
+      readonly nodes?: ReadonlyArray<{
+        readonly __typename?: 'Repository';
+        readonly name: string;
+        readonly url: any;
+        readonly description?: string;
+        readonly updatedAt: any;
+        readonly stargazerCount: number;
+        readonly isPrivate: boolean;
+        readonly primaryLanguage?: {
+          readonly __typename?: 'Language';
+          readonly color?: string;
+          readonly name: string;
+        };
+        readonly repositoryTopics: {
+          readonly __typename?: 'RepositoryTopicConnection';
+          readonly nodes?: ReadonlyArray<{
+            readonly __typename?: 'RepositoryTopic';
+            readonly topic: { readonly __typename?: 'Topic'; readonly name: string };
+          }>;
+        };
+        readonly forks: {
+          readonly __typename?: 'RepositoryConnection';
+          readonly totalCount: number;
+        };
+      }>;
+    };
+  };
+};
+
 export type SearchQueryVariables = Exact<{
   after?: InputMaybe<Scalars['String']['input']>;
   before?: InputMaybe<Scalars['String']['input']>;
@@ -28745,6 +28814,36 @@ export const ProfileDocument = gql`
     }
   }
 `;
+export const RepositoriesDocument = gql`
+  query Repositories($login: String!, $first: Int!, $orderBy: RepositoryOrder!) {
+    user(login: $login) {
+      repositories(first: $first, orderBy: $orderBy) {
+        nodes {
+          name
+          url
+          description
+          primaryLanguage {
+            color
+            name
+          }
+          updatedAt
+          stargazerCount
+          repositoryTopics(first: 10) {
+            nodes {
+              topic {
+                name
+              }
+            }
+          }
+          forks {
+            totalCount
+          }
+          isPrivate
+        }
+      }
+    }
+  }
+`;
 export const SearchDocument = gql`
   query Search(
     $after: String
@@ -28796,6 +28895,20 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
             ...wrappedRequestHeaders
           }),
         'Profile',
+        'query'
+      );
+    },
+    Repositories(
+      variables: RepositoriesQueryVariables,
+      requestHeaders?: GraphQLClientRequestHeaders
+    ): Promise<RepositoriesQuery> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<RepositoriesQuery>(RepositoriesDocument, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders
+          }),
+        'Repositories',
         'query'
       );
     },
