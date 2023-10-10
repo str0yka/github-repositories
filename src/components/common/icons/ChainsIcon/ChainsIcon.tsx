@@ -1,6 +1,6 @@
-interface LinkIconProps extends React.ComponentProps<'svg'> {}
+interface ChainsIconProps extends React.ComponentProps<'svg'> {}
 
-export const LinkIcon: React.FC<LinkIconProps> = (props) => (
+export const ChainsIcon: React.FC<ChainsIconProps> = (props) => (
   <svg
     {...props}
     aria-hidden='true'

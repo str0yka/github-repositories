@@ -7,11 +7,40 @@
 .avatarContainer {
   width: 300px;
   height: 300px;
+  border-radius: 50%;
+  overflow: hidden;
 }
 
 .usernameContainer {
   display: flex;
   flex-direction: column;
+}
+
+.loginSkeletonContainer {
+  width: 100px;
+  height: 16px;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.profileButtonSkeletonContainer {
+  height: 32px;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.additionalTextSkeletonContainer {
+  height: 12px;
+  width: 75px;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.additionalIconSkeletonContainer {
+  width: 12px;
+  height: 12px;
+  border-radius: 5px;
+  overflow: hidden;
 }
 
 .followersContainer {

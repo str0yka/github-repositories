@@ -22,7 +22,7 @@ interface RootLayoutProps {
 const RootLayout: React.FC<RootLayoutProps> = ({ children }) => (
   <html lang='en'>
     <Provider>
-      <body className={cn(inter.variable, 'light')}>
+      <body className={cn(inter.variable, 'dark')}>
         <div id='modalContainer' />
         <Header />
         <Main>{children}</Main>

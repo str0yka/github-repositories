@@ -1,40 +1,42 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
-import { Avatar, Button, Flex, Typography } from '~components/ui';
-import { BuildingIcon, LinkIcon, TwitchIcon, TwitterIcon, YouTubeIcon } from '~components/ui/icons';
-import { SocialAccountProvider, gql } from '~graphql';
+import { Avatar, Button, Typography } from '~components/ui';
+import { BuildingIcon } from '~components/ui/icons';
+import { gql } from '~graphql';
 
 import s from './Profile.module.css';
+import { withSocialAccountProvider } from './helpers';
+
+const getProfile = async (login: string) => {
+  try {
+    const response = await gql.Profile({ login, socialFirst: 10 });
+    if (!response.user) {
+      throw new Error('User not found');
+    }
+    return response.user;
+  } catch {
+    return notFound();
+  }
+};
 
 interface ProfileProps {
   login: string;
 }
 
 export const Profile: React.FC<ProfileProps> = async ({ login }) => {
-  const profile = await (async () => {
-    try {
-      const response = await gql.Profile({ login, socialFirst: 10 });
-      if (!response.user) {
-        throw new Error('User not found');
-      }
-      return response.user;
-    } catch {
-      return notFound();
-    }
-  })();
+  const profile = await getProfile(login);
 
   return (
-    <Flex
-      d='column'
-      g={16}
-    >
-      <Avatar
-        alt='avatar'
-        avatarUrl={profile.avatarUrl}
-        size={300}
-      />
-      <Flex d='column'>
+    <div className={s.profileContainer}>
+      <div className={s.avatarContainer}>
+        <Avatar
+          alt='avatar'
+          avatarUrl={profile.avatarUrl}
+          size={300}
+        />
+      </div>
+      <div className={s.usernameContainer}>
         {profile.name && (
           <Typography
             comp='span'
@@ -50,14 +52,11 @@ export const Profile: React.FC<ProfileProps> = async ({ login }) => {
         >
           {profile.login}
         </Typography>
-      </Flex>
+      </div>
       <Link href={profile.url}>
         <Button variant='contained'>GitHub</Button>
       </Link>
-      <Flex
-        d='row'
-        g={8}
-      >
+      <div className={s.followersContainer}>
         <Typography
           color='text-2'
           comp='span'
@@ -84,11 +83,8 @@ export const Profile: React.FC<ProfileProps> = async ({ login }) => {
           </Typography>{' '}
           following
         </Typography>
-      </Flex>
-      <Flex
-        d='column'
-        g={4}
-      >
+      </div>
+      <div className={s.additionalContainer}>
         {profile.location && (
           <Typography
             comp='span'
@@ -98,10 +94,7 @@ export const Profile: React.FC<ProfileProps> = async ({ login }) => {
           </Typography>
         )}
         {profile.company && (
-          <Flex
-            ai='center'
-            g={6}
-          >
+          <div className={s.additionalItemContainer}>
             <BuildingIcon className={s.userInfoIcon} />
             <Typography
               comp='span'
@@ -110,43 +103,29 @@ export const Profile: React.FC<ProfileProps> = async ({ login }) => {
               {' '}
               {profile.company}
             </Typography>
-          </Flex>
+          </div>
         )}
-        {profile.socialAccounts.edges?.map((edge) => (
-          <Link
-            key={edge.node?.provider}
-            href={edge.node?.url}
-          >
-            <Flex
-              ai='center'
-              g={6}
+        {profile.socialAccounts.edges?.map((edge) => {
+          const SocialIcon = withSocialAccountProvider(edge.node?.provider);
+
+          return (
+            <Link
+              key={edge.node?.provider}
+              href={edge.node?.url}
             >
-              {(() => {
-                const provider = edge.node?.provider;
-                if (provider === SocialAccountProvider.Twitter) {
-                  return <TwitchIcon className={s.userInfoIcon} />;
-                }
-
-                if (provider === SocialAccountProvider.Twitch) {
-                  return <TwitterIcon className={s.userInfoIcon} />;
-                }
-
-                if (provider === SocialAccountProvider.Youtube) {
-                  return <YouTubeIcon className={s.userInfoIcon} />;
-                }
-
-                return <LinkIcon className={s.userInfoIcon} />;
-              })()}
-              <Typography
-                comp='span'
-                size={14}
-              >
-                {edge.node?.displayName}
-              </Typography>
-            </Flex>
-          </Link>
-        ))}
-      </Flex>
-    </Flex>
+              <div className={s.additionalItemContainer}>
+                <SocialIcon className={s.userInfoIcon} />
+                <Typography
+                  comp='span'
+                  size={14}
+                >
+                  {edge.node?.displayName}
+                </Typography>
+              </div>
+            </Link>
+          );
+        })}
+      </div>
+    </div>
   );
 };

@@ -1,0 +1,27 @@
+query SearchRepositories($login: String!, $first: Int!, $orderBy: RepositoryOrder!) {
+  user(login: $login) {
+    repositories(first: $first, orderBy: $orderBy) {
+      nodes {
+        name
+        description
+        primaryLanguage {
+          color
+          name
+        }
+        updatedAt
+        stargazerCount
+        repositoryTopics(first: 10) {
+          nodes {
+            topic {
+              name
+            }
+          }
+        }
+        forks {
+          totalCount
+        }
+        isPrivate
+      }
+    }
+  }
+}

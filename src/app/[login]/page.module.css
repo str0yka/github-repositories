@@ -1,0 +1,18 @@
+.pageContainer {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+}
+
+.profileContainer {
+  width: 300px;
+}
+
+.contentContainer {
+  flex-grow: 1;
+}
+
+.skeletonContainer {
+  width: 300px;
+  height: 300px;
+}

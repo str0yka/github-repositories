@@ -2,8 +2,8 @@ overwrite: true
 schema:
   - https://api.github.com/graphql:
       headers:
-        User-Agent: ${GITHUB_USER_AGENT}
-        Authorization: 'Bearer ${GITHUB_PERSONAL_TOKEN}'
+        User-Agent: ${NEXT_PUBLIC_GITHUB_USER_AGENT}
+        Authorization: 'Bearer ${NEXT_PUBLIC_GITHUB_PERSONAL_TOKEN}'
 documents: './src/graphql/documents/**/*.gql'
 generates:
   ./src/graphql/requests/__generated__.ts:

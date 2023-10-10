@@ -1,0 +1,19 @@
+.skeleton {
+  height: 100%;
+  background-color: var(--color-background-1);
+  animation: pulse 1000ms infinite ease;
+}
+
+@keyframes pulse {
+  0% {
+    background-color: var(--color-secondary-1);
+  }
+
+  50% {
+    background-color: var(--color-secondary-2);
+  }
+
+  100% {
+    background-color: var(--color-secondary-1);
+  }
+}

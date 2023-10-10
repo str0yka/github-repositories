@@ -1,6 +1,9 @@
-import { Flex, Menu } from '~components/ui';
+import { Suspense } from 'react';
 
-import { Profile } from './_sections';
+import { Input, Menu, Skeleton } from '~components/ui';
+
+import { Profile, ProfileSkeleton } from './_sections';
+import s from './page.module.css';
 
 interface ProfilePageProps {
   params: {
@@ -11,8 +14,29 @@ interface ProfilePageProps {
   };
 }
 
-const Repositories = () => <h1>repositories</h1>;
-const Test = () => <Menu>menu</Menu>;
+const Repositories = () => (
+  <Menu>
+    <Menu.Group>
+      <Input label='Find repository' />
+    </Menu.Group>
+    <Menu.Group>
+      <Input label='Find repository' />
+    </Menu.Group>
+    <Menu.Group>
+      <Input label='Find repository' />
+    </Menu.Group>
+    <Menu.Group>
+      <Input label='Find repository' />
+    </Menu.Group>
+  </Menu>
+);
+const Test = () => (
+  <Menu>
+    <div className={s.skeletonContainer}>
+      <Skeleton />
+    </div>
+  </Menu>
+);
 
 const withTabQuery = (tab?: string) => {
   if (!tab) return Test;
@@ -24,15 +48,16 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ params, searchParams }) => {
   const Content = withTabQuery(searchParams.tab);
 
   return (
-    <Flex
-      ai='flex-start'
-      g={24}
-    >
-      <Profile login={params.login} />
-      <div>
+    <div className={s.pageContainer}>
+      <div className={s.profileContainer}>
+        <Suspense fallback={<ProfileSkeleton />}>
+          <Profile login={params.login} />
+        </Suspense>
+      </div>
+      <div className={s.contentContainer}>
         <Content />
       </div>
-    </Flex>
+    </div>
   );
 };
 
