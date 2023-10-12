@@ -5,8 +5,8 @@ import { Avatar, Button, Typography } from '~components/ui';
 import { BuildingIcon } from '~components/ui/icons';
 import { gql } from '~graphql';
 
-import s from './Profile.module.css';
-import { withSocialAccountProvider } from './helpers';
+import { withSocialAccountProvider } from './_helpers';
+import s from './page.module.css';
 
 const getProfile = async (login: string) => {
   try {
@@ -21,11 +21,13 @@ const getProfile = async (login: string) => {
 };
 
 interface ProfileProps {
-  login: string;
+  params: {
+    login: string;
+  };
 }
 
-export const Profile: React.FC<ProfileProps> = async ({ login }) => {
-  const profile = await getProfile(login);
+const Profile: React.FC<ProfileProps> = async ({ params }) => {
+  const profile = await getProfile(params.login);
 
   return (
     <div className={s.profileContainer}>
@@ -129,3 +131,5 @@ export const Profile: React.FC<ProfileProps> = async ({ login }) => {
     </div>
   );
 };
+
+export default Profile;

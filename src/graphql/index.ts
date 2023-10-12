@@ -12,8 +12,11 @@ export const gql = getSdk(client);
 
 export {
   useSearchQuery,
+  useRepositoriesQuery,
   SearchType,
   SocialAccountProvider,
   RepositoryOrderField,
   OrderDirection
 } from './hooks/__generated__';
+
+export type { RepositoriesQuery } from './hooks/__generated__';

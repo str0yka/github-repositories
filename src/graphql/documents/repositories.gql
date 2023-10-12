@@ -1,6 +1,6 @@
-query Repositories($login: String!, $first: Int!, $orderBy: RepositoryOrder!) {
+query Repositories($login: String!, $first: Int!, $orderBy: RepositoryOrder!, $after: String) {
   user(login: $login) {
-    repositories(first: $first, orderBy: $orderBy) {
+    repositories(first: $first, orderBy: $orderBy, after: $after) {
       nodes {
         name
         url
@@ -22,6 +22,12 @@ query Repositories($login: String!, $first: Int!, $orderBy: RepositoryOrder!) {
           totalCount
         }
         isPrivate
+      }
+      pageInfo {
+        endCursor
+        startCursor
+        hasNextPage
+        hasPreviousPage
       }
     }
   }

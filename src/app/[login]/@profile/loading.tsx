@@ -1,8 +1,8 @@
 import { Skeleton } from '~components/ui';
 
-import s from './ProfileSkeleton.module.css';
+import s from './loading.module.css';
 
-export const ProfileSkeleton = () => (
+const ProfileSkeleton = () => (
   <div className={s.profileContainer}>
     <div className={s.avatarContainer}>
       <Skeleton />
@@ -42,3 +42,5 @@ export const ProfileSkeleton = () => (
     </div>
   </div>
 );
+
+export default ProfileSkeleton;

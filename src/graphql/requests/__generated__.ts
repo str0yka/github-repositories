@@ -21675,6 +21675,8 @@ export enum RepositoryRuleType {
   TagNamePattern = 'TAG_NAME_PATTERN',
   /** Only allow users with bypass permission to update matching refs. */
   Update = 'UPDATE',
+  /** Require all changes made to a targeted branch to pass the specified workflows before they can be merged. */
+  Workflows = 'WORKFLOWS',
   /** Workflow files cannot be modified. */
   WorkflowUpdates = 'WORKFLOW_UPDATES'
 }
@@ -22485,7 +22487,8 @@ export type RuleParameters =
   | RequiredDeploymentsParameters
   | RequiredStatusChecksParameters
   | TagNamePatternParameters
-  | UpdateParameters;
+  | UpdateParameters
+  | WorkflowsParameters;
 
 /** Specifies the parameters for a `RepositoryRule` object. Only one of the fields should be specified. */
 export type RuleParametersInput = {
@@ -22507,6 +22510,8 @@ export type RuleParametersInput = {
   readonly tagNamePattern?: InputMaybe<TagNamePatternParametersInput>;
   /** Parameters used for the `update` rule type */
   readonly update?: InputMaybe<UpdateParametersInput>;
+  /** Parameters used for the `workflows` rule type */
+  readonly workflows?: InputMaybe<WorkflowsParametersInput>;
 };
 
 /** Types which can have `RepositoryRule` objects. */
@@ -23058,6 +23063,8 @@ export enum SocialAccountProvider {
   Linkedin = 'LINKEDIN',
   /** Open-source federated microblogging service. */
   Mastodon = 'MASTODON',
+  /** JavaScript package registry. */
+  Npm = 'NPM',
   /** Social news aggregation and discussion website. */
   Reddit = 'REDDIT',
   /** Live-streaming service. */
@@ -28546,6 +28553,31 @@ export type WorkflowRunsArgs = {
   orderBy?: InputMaybe<WorkflowRunOrder>;
 };
 
+/** A workflow that must run for this rule to pass */
+export type WorkflowFileReference = {
+  readonly __typename?: 'WorkflowFileReference';
+  /** The path to the workflow file */
+  readonly path: Scalars['String']['output'];
+  /** The ref (branch or tag) of the workflow file to use */
+  readonly ref?: Maybe<Scalars['String']['output']>;
+  /** The ID of the repository where the workflow is defined */
+  readonly repositoryId: Scalars['Int']['output'];
+  /** The commit SHA of the workflow file to use */
+  readonly sha?: Maybe<Scalars['String']['output']>;
+};
+
+/** A workflow that must run for this rule to pass */
+export type WorkflowFileReferenceInput = {
+  /** The path to the workflow file */
+  readonly path: Scalars['String']['input'];
+  /** The ref (branch or tag) of the workflow file to use */
+  readonly ref?: InputMaybe<Scalars['String']['input']>;
+  /** The ID of the repository where the workflow is defined */
+  readonly repositoryId: Scalars['Int']['input'];
+  /** The commit SHA of the workflow file to use */
+  readonly sha?: InputMaybe<Scalars['String']['input']>;
+};
+
 /** A workflow run. */
 export type WorkflowRun = Node &
   UniformResourceLocatable & {
@@ -28666,6 +28698,19 @@ export enum WorkflowState {
   DisabledManually = 'DISABLED_MANUALLY'
 }
 
+/** Require all changes made to a targeted branch to pass the specified workflows before they can be merged. */
+export type WorkflowsParameters = {
+  readonly __typename?: 'WorkflowsParameters';
+  /** Workflows that must pass for this rule to pass. */
+  readonly workflows: ReadonlyArray<WorkflowFileReference>;
+};
+
+/** Require all changes made to a targeted branch to pass the specified workflows before they can be merged. */
+export type WorkflowsParametersInput = {
+  /** Workflows that must pass for this rule to pass. */
+  readonly workflows: ReadonlyArray<WorkflowFileReferenceInput>;
+};
+
 export type ProfileQueryVariables = Exact<{
   login: Scalars['String']['input'];
   socialFirst: Scalars['Int']['input'];
@@ -28707,6 +28752,7 @@ export type RepositoriesQueryVariables = Exact<{
   login: Scalars['String']['input'];
   first: Scalars['Int']['input'];
   orderBy: RepositoryOrder;
+  after?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 export type RepositoriesQuery = {
@@ -28740,6 +28786,13 @@ export type RepositoriesQuery = {
           readonly totalCount: number;
         };
       }>;
+      readonly pageInfo: {
+        readonly __typename?: 'PageInfo';
+        readonly endCursor?: string;
+        readonly startCursor?: string;
+        readonly hasNextPage: boolean;
+        readonly hasPreviousPage: boolean;
+      };
     };
   };
 };
@@ -28815,9 +28868,9 @@ export const ProfileDocument = gql`
   }
 `;
 export const RepositoriesDocument = gql`
-  query Repositories($login: String!, $first: Int!, $orderBy: RepositoryOrder!) {
+  query Repositories($login: String!, $first: Int!, $orderBy: RepositoryOrder!, $after: String) {
     user(login: $login) {
-      repositories(first: $first, orderBy: $orderBy) {
+      repositories(first: $first, orderBy: $orderBy, after: $after) {
         nodes {
           name
           url
@@ -28839,6 +28892,12 @@ export const RepositoriesDocument = gql`
             totalCount
           }
           isPrivate
+        }
+        pageInfo {
+          endCursor
+          startCursor
+          hasNextPage
+          hasPreviousPage
         }
       }
     }

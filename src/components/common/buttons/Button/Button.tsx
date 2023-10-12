@@ -36,4 +36,4 @@ interface ButtonTextProps {
   children: string | number;
 }
 
-Button.Text = ({ children }: ButtonTextProps) => <span>{children}</span>;
+Button.Text = ({ children }: ButtonTextProps) => <span className={s.text}>{children}</span>;
