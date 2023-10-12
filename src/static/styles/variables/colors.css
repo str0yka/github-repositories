@@ -1,6 +1,7 @@
 :root {
   --color-primary-1: #2f81f7;
   --color-primary-2: #121d2f;
+  --color-accent-1: #f78166;
 }
 
 body.dark {

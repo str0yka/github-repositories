@@ -1,5 +1,9 @@
 import s from './layout.module.css';
 
+export const generateMetadata = ({ params }: { params: { login: string } }) => ({
+  title: `${params.login} / Repositories`
+});
+
 interface ProfileLayoutProps {
   profile: React.ReactNode;
   repositories: React.ReactNode;

@@ -16,11 +16,6 @@ export const SearchRepository = () => {
   const debouncedQuery = useDebounce(query);
 
   useEffect(() => {
-    console.log('MOUNT');
-    return () => console.log('UNMOUNT');
-  }, []);
-
-  useEffect(() => {
     const login = params.login as string;
 
     const newSearchParams = new URLSearchParams(searchParams);
