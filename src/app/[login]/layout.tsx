@@ -1,18 +1,14 @@
 import s from './layout.module.css';
 
-export const generateMetadata = ({ params }: { params: { login: string } }) => ({
-  title: `${params.login} / Repositories`
-});
-
 interface ProfileLayoutProps {
   profile: React.ReactNode;
-  repositories: React.ReactNode;
+  content: React.ReactNode;
 }
 
-const ProfileLayout: React.FC<ProfileLayoutProps> = ({ profile, repositories }) => (
+const ProfileLayout: React.FC<ProfileLayoutProps> = ({ profile, content }) => (
   <div className={s.pageContainer}>
     <div className={s.profileContainer}>{profile}</div>
-    <div className={s.contentContainer}>{repositories}</div>
+    <div className={s.contentContainer}>{content}</div>
   </div>
 );
 

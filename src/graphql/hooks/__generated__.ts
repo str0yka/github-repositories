@@ -28838,6 +28838,60 @@ export type SearchQuery = {
   };
 };
 
+export type StarredRepositoriesQueryVariables = Exact<{
+  login: Scalars['String']['input'];
+  first: Scalars['Int']['input'];
+  orderBy: StarOrder;
+  after?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+export type StarredRepositoriesQuery = {
+  readonly __typename?: 'Query';
+  readonly user?: {
+    readonly __typename?: 'User';
+    readonly starredRepositories: {
+      readonly __typename?: 'StarredRepositoryConnection';
+      readonly edges?: ReadonlyArray<{
+        readonly __typename?: 'StarredRepositoryEdge';
+        readonly starredAt: any;
+        readonly node: {
+          readonly __typename?: 'Repository';
+          readonly id: string;
+          readonly name: string;
+          readonly url: any;
+          readonly description?: string;
+          readonly stargazerCount: number;
+          readonly forkCount: number;
+          readonly owner:
+            | { readonly __typename?: 'Organization'; readonly login: string }
+            | { readonly __typename?: 'User'; readonly login: string };
+          readonly primaryLanguage?: {
+            readonly __typename?: 'Language';
+            readonly name: string;
+            readonly color?: string;
+          };
+          readonly repositoryTopics: {
+            readonly __typename?: 'RepositoryTopicConnection';
+            readonly nodes?: ReadonlyArray<{
+              readonly __typename?: 'RepositoryTopic';
+              readonly topic: { readonly __typename?: 'Topic'; readonly name: string };
+            }>;
+          };
+        };
+      }>;
+    };
+  };
+};
+
+export type UsernameQueryVariables = Exact<{
+  login: Scalars['String']['input'];
+}>;
+
+export type UsernameQuery = {
+  readonly __typename?: 'Query';
+  readonly user?: { readonly __typename?: 'User'; readonly login: string; readonly name?: string };
+};
+
 export const ProfileDocument = gql`
   query Profile($login: String!, $socialFirst: Int!) {
     user(login: $login) {
@@ -29047,3 +29101,125 @@ export function useSearchLazyQuery(
 export type SearchQueryHookResult = ReturnType<typeof useSearchQuery>;
 export type SearchLazyQueryHookResult = ReturnType<typeof useSearchLazyQuery>;
 export type SearchQueryResult = Apollo.QueryResult<SearchQuery, SearchQueryVariables>;
+export const StarredRepositoriesDocument = gql`
+  query StarredRepositories($login: String!, $first: Int!, $orderBy: StarOrder!, $after: String) {
+    user(login: $login) {
+      starredRepositories(first: $first, orderBy: $orderBy, after: $after) {
+        edges {
+          starredAt
+          node {
+            id
+            name
+            url
+            owner {
+              login
+            }
+            description
+            primaryLanguage {
+              name
+              color
+            }
+            repositoryTopics(first: 10) {
+              nodes {
+                topic {
+                  name
+                }
+              }
+            }
+            stargazerCount
+            forkCount
+          }
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useStarredRepositoriesQuery__
+ *
+ * To run a query within a React component, call `useStarredRepositoriesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useStarredRepositoriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useStarredRepositoriesQuery({
+ *   variables: {
+ *      login: // value for 'login'
+ *      first: // value for 'first'
+ *      orderBy: // value for 'orderBy'
+ *      after: // value for 'after'
+ *   },
+ * });
+ */
+export function useStarredRepositoriesQuery(
+  baseOptions: Apollo.QueryHookOptions<StarredRepositoriesQuery, StarredRepositoriesQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<StarredRepositoriesQuery, StarredRepositoriesQueryVariables>(
+    StarredRepositoriesDocument,
+    options
+  );
+}
+export function useStarredRepositoriesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    StarredRepositoriesQuery,
+    StarredRepositoriesQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<StarredRepositoriesQuery, StarredRepositoriesQueryVariables>(
+    StarredRepositoriesDocument,
+    options
+  );
+}
+export type StarredRepositoriesQueryHookResult = ReturnType<typeof useStarredRepositoriesQuery>;
+export type StarredRepositoriesLazyQueryHookResult = ReturnType<
+  typeof useStarredRepositoriesLazyQuery
+>;
+export type StarredRepositoriesQueryResult = Apollo.QueryResult<
+  StarredRepositoriesQuery,
+  StarredRepositoriesQueryVariables
+>;
+export const UsernameDocument = gql`
+  query Username($login: String!) {
+    user(login: $login) {
+      login
+      name
+    }
+  }
+`;
+
+/**
+ * __useUsernameQuery__
+ *
+ * To run a query within a React component, call `useUsernameQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUsernameQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUsernameQuery({
+ *   variables: {
+ *      login: // value for 'login'
+ *   },
+ * });
+ */
+export function useUsernameQuery(
+  baseOptions: Apollo.QueryHookOptions<UsernameQuery, UsernameQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<UsernameQuery, UsernameQueryVariables>(UsernameDocument, options);
+}
+export function useUsernameLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<UsernameQuery, UsernameQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<UsernameQuery, UsernameQueryVariables>(UsernameDocument, options);
+}
+export type UsernameQueryHookResult = ReturnType<typeof useUsernameQuery>;
+export type UsernameLazyQueryHookResult = ReturnType<typeof useUsernameLazyQuery>;
+export type UsernameQueryResult = Apollo.QueryResult<UsernameQuery, UsernameQueryVariables>;

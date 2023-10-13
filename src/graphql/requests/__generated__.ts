@@ -28838,6 +28838,60 @@ export type SearchQuery = {
   };
 };
 
+export type StarredRepositoriesQueryVariables = Exact<{
+  login: Scalars['String']['input'];
+  first: Scalars['Int']['input'];
+  orderBy: StarOrder;
+  after?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+export type StarredRepositoriesQuery = {
+  readonly __typename?: 'Query';
+  readonly user?: {
+    readonly __typename?: 'User';
+    readonly starredRepositories: {
+      readonly __typename?: 'StarredRepositoryConnection';
+      readonly edges?: ReadonlyArray<{
+        readonly __typename?: 'StarredRepositoryEdge';
+        readonly starredAt: any;
+        readonly node: {
+          readonly __typename?: 'Repository';
+          readonly id: string;
+          readonly name: string;
+          readonly url: any;
+          readonly description?: string;
+          readonly stargazerCount: number;
+          readonly forkCount: number;
+          readonly owner:
+            | { readonly __typename?: 'Organization'; readonly login: string }
+            | { readonly __typename?: 'User'; readonly login: string };
+          readonly primaryLanguage?: {
+            readonly __typename?: 'Language';
+            readonly name: string;
+            readonly color?: string;
+          };
+          readonly repositoryTopics: {
+            readonly __typename?: 'RepositoryTopicConnection';
+            readonly nodes?: ReadonlyArray<{
+              readonly __typename?: 'RepositoryTopic';
+              readonly topic: { readonly __typename?: 'Topic'; readonly name: string };
+            }>;
+          };
+        };
+      }>;
+    };
+  };
+};
+
+export type UsernameQueryVariables = Exact<{
+  login: Scalars['String']['input'];
+}>;
+
+export type UsernameQuery = {
+  readonly __typename?: 'Query';
+  readonly user?: { readonly __typename?: 'User'; readonly login: string; readonly name?: string };
+};
+
 export const ProfileDocument = gql`
   query Profile($login: String!, $socialFirst: Int!) {
     user(login: $login) {
@@ -28932,6 +28986,47 @@ export const SearchDocument = gql`
     }
   }
 `;
+export const StarredRepositoriesDocument = gql`
+  query StarredRepositories($login: String!, $first: Int!, $orderBy: StarOrder!, $after: String) {
+    user(login: $login) {
+      starredRepositories(first: $first, orderBy: $orderBy, after: $after) {
+        edges {
+          starredAt
+          node {
+            id
+            name
+            url
+            owner {
+              login
+            }
+            description
+            primaryLanguage {
+              name
+              color
+            }
+            repositoryTopics(first: 10) {
+              nodes {
+                topic {
+                  name
+                }
+              }
+            }
+            stargazerCount
+            forkCount
+          }
+        }
+      }
+    }
+  }
+`;
+export const UsernameDocument = gql`
+  query Username($login: String!) {
+    user(login: $login) {
+      login
+      name
+    }
+  }
+`;
 
 export type SdkFunctionWrapper = <T>(
   action: (requestHeaders?: Record<string, string>) => Promise<T>,
@@ -28982,6 +29077,34 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
             ...wrappedRequestHeaders
           }),
         'Search',
+        'query'
+      );
+    },
+    StarredRepositories(
+      variables: StarredRepositoriesQueryVariables,
+      requestHeaders?: GraphQLClientRequestHeaders
+    ): Promise<StarredRepositoriesQuery> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<StarredRepositoriesQuery>(StarredRepositoriesDocument, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders
+          }),
+        'StarredRepositories',
+        'query'
+      );
+    },
+    Username(
+      variables: UsernameQueryVariables,
+      requestHeaders?: GraphQLClientRequestHeaders
+    ): Promise<UsernameQuery> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<UsernameQuery>(UsernameDocument, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders
+          }),
+        'Username',
         'query'
       );
     }

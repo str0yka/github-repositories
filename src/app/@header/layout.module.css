@@ -1,5 +1,5 @@
 .headerLayout {
-  --header-layout-padding: 15px;
+  --header-layout-padding: 12px;
 
   padding: var(--header-layout-padding);
   display: flex;

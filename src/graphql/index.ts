@@ -16,6 +16,7 @@ export {
   SearchType,
   SocialAccountProvider,
   RepositoryOrderField,
+  StarOrderField,
   OrderDirection
 } from './hooks/__generated__';
 

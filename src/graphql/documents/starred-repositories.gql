@@ -1,0 +1,31 @@
+query StarredRepositories($login: String!, $first: Int!, $orderBy: StarOrder!, $after: String) {
+  user(login: $login) {
+    starredRepositories(first: $first, orderBy: $orderBy, after: $after) {
+      edges {
+        starredAt
+        node {
+          id
+          name
+          url
+          owner {
+            login
+          }
+          description
+          primaryLanguage {
+            name
+            color
+          }
+          repositoryTopics(first: 10) {
+            nodes {
+              topic {
+                name
+              }
+            }
+          }
+          stargazerCount
+          forkCount
+        }
+      }
+    }
+  }
+}
