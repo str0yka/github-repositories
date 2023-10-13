@@ -1,17 +1,15 @@
 import { Typography } from '~components/ui';
 
-import s from './not-found.module.css';
+import s from './StarredRepositoriesNotFound.module.css';
 
-const RepositoriesNotFound = () => (
+export const StarredRepositoriesNotFound = () => (
   <div className={s.notFoundContainer}>
     <Typography
       comp='h2'
       size={18}
       weight={700}
     >
-      Doesn’t have any repositories that match.
+      Doesn’t have any starred repositories that match.
     </Typography>
   </div>
 );
-
-export default RepositoriesNotFound;

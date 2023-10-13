@@ -1,0 +1,11 @@
+.skeletonListContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.skeletonItemContainer {
+  height: 150px;
+  overflow: hidden;
+  border-radius: 5px;
+}

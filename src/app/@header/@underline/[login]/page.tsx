@@ -4,7 +4,8 @@ import { Button } from '~components/ui';
 import { ROUTES } from '~utils/constants';
 import { cn } from '~utils/helpers';
 
-import { checkTabQuery } from './_helpers';
+import { withTabQuery } from '../../../[login]/_helpers';
+
 import s from './page.module.css';
 
 interface UnderlineProfileProps {
@@ -17,7 +18,7 @@ interface UnderlineProfileProps {
 }
 
 const UnderlineProfile: React.FC<UnderlineProfileProps> = ({ params, searchParams }) => {
-  const tab = checkTabQuery(searchParams.tab);
+  const tab = withTabQuery(searchParams.tab, { repositories: 'repositories', stars: 'stars' });
 
   return (
     <div className={s.tabsContainer}>

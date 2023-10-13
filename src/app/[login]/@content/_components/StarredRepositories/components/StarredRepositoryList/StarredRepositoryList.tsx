@@ -1,27 +1,21 @@
 import { Group } from '~components/ui';
 import { gql, OrderDirection, StarOrderField } from '~graphql';
 
-import { StarredRepository } from './_components';
-import StarredRepositoriesNotFound from './not-found';
+import { StarredRepository, StarredRepositoriesNotFound } from './components';
 
-interface StarredRepositoriesProps {
-  params: {
-    login: string;
-  };
-  searchParams: {
-    q?: string;
-  };
+interface StarredRepositoryListProps {
+  login: string;
+  query?: string;
 }
 
 const STARRED_REPOSITORIES_QUANTITY = 50;
 
-const StarredRepositories: React.FC<StarredRepositoriesProps> = async ({
-  params,
-  searchParams
+export const StarredRepositoryList: React.FC<StarredRepositoryListProps> = async ({
+  login,
+  query = ''
 }) => {
-  const query = searchParams.q ?? '';
   const starredRepositories = await gql.StarredRepositories({
-    login: params.login,
+    login,
     first: STARRED_REPOSITORIES_QUANTITY,
     orderBy: { field: StarOrderField.StarredAt, direction: OrderDirection.Desc }
   });
@@ -59,5 +53,3 @@ const StarredRepositories: React.FC<StarredRepositoriesProps> = async ({
     </Group>
   ));
 };
-
-export default StarredRepositories;

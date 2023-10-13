@@ -1,24 +1,18 @@
 import { Group } from '~components/ui';
 import { gql, OrderDirection, RepositoryOrderField } from '~graphql';
 
-import { Repository } from './_components';
-import RepositoriesNotFound from './not-found';
+import { Repository, RepositoriesNotFound } from './components';
 
 interface RepositoriesProps {
-  params: {
-    login: string;
-  };
-  searchParams: {
-    q?: string;
-  };
+  login: string;
+  query?: string;
 }
 
 const REPOSITORIES_QUANTITY = 50;
 
-const Repositories: React.FC<RepositoriesProps> = async ({ params, searchParams }) => {
-  const query = searchParams.q ?? '';
+export const RepositoryList: React.FC<RepositoriesProps> = async ({ login, query = '' }) => {
   const repositories = await gql.Repositories({
-    login: params.login,
+    login,
     first: REPOSITORIES_QUANTITY,
     orderBy: { field: RepositoryOrderField.UpdatedAt, direction: OrderDirection.Desc }
   });
@@ -45,5 +39,3 @@ const Repositories: React.FC<RepositoriesProps> = async ({ params, searchParams 
     </Group>
   ));
 };
-
-export default Repositories;

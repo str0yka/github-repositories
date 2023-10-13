@@ -1,9 +1,8 @@
 import { gql } from '~graphql';
 
-const getTitle = (tab?: string) => {
-  if (tab === 'stars') return 'Starred Repositories';
-  return 'Repositories';
-};
+import { withTabQuery } from '../_helpers';
+
+import { Repositories, StarredRepositories } from './_components';
 
 export const generateMetadata = async ({
   params,
@@ -12,18 +11,41 @@ export const generateMetadata = async ({
   params: { login: string };
   searchParams: { tab?: string };
 }) => {
-  const username = await gql.Username({ login: params.login });
+  const { login } = params;
 
-  const login = username.user?.login ?? params.login;
-  const name = username.user?.name ?? params.login;
+  const username = await gql.Username({ login });
 
-  const title = getTitle(searchParams.tab);
+  const name = username.user?.name ?? login;
+
+  const title = withTabQuery(searchParams.tab, {
+    repositories: 'Repositories',
+    stars: 'Starred Repositories'
+  });
 
   return {
     title: `${login} (${name}) / ${title}`
   };
 };
 
-const Content = () => null;
+interface ContentProps {
+  params: {
+    login: string;
+  };
+  searchParams: Record<string, string>;
+}
+
+const Content: React.FC<ContentProps> = ({ params, searchParams }) => {
+  const ContentWithTabQuery = withTabQuery(searchParams.tab, {
+    repositories: Repositories,
+    stars: StarredRepositories
+  });
+
+  return (
+    <ContentWithTabQuery
+      params={params}
+      searchParams={searchParams}
+    />
+  );
+};
 
 export default Content;
