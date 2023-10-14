@@ -1,0 +1,47 @@
+.selectMenuContainer {
+  position: relative;
+}
+
+.menuContainer {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 300px;
+}
+
+.menuHeaderContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 8px;
+}
+
+.closeMenuButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+}
+
+.closeMenuButtonIcon {
+  fill: var(--color-secondary-3);
+}
+
+.optionContainer {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.activeOptionIconContainer {
+  width: 12px;
+  height: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.activeOptionIcon {
+  fill: var(--color-text-2);
+}
