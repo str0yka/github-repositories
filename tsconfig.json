@@ -20,6 +20,7 @@
       }
     ],
     "paths": {
+      "~pages/*": ["./src/app/*"],
       "~components": ["./src/components"],
       "~components/ui": ["./src/components/common"],
       "~components/ui/icons": ["./src/components/common/icons"],
@@ -29,7 +30,7 @@
       "~utils/helpers": ["./src/utils/helpers"],
       "~utils/constants": ["./src/utils/constants"],
       "~utils/hooks": ["./src/utils/hooks"],
-      "~graphql": ["./src/graphql"],
+      "~graphql": ["./src/graphql"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.d.ts", ".next/types/**/*.ts"],

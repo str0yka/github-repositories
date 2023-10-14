@@ -1,7 +1,7 @@
 import { Group } from '~components/ui';
 import { gql, OrderDirection, RepositoryOrderField } from '~graphql';
-
-import { withDirectionQuery } from '../../../../_helpers';
+import { DIRECTION_DEFAULT, QUERY_DEFAULT } from '~pages/[login]/_constants';
+import { withDirectionQuery } from '~pages/[login]/_helpers';
 
 import { Repository, RepositoriesNotFound } from './components';
 
@@ -15,8 +15,8 @@ const REPOSITORIES_QUANTITY = 50;
 
 export const RepositoryList: React.FC<RepositoriesProps> = async ({
   login,
-  query = '',
-  direction = 'DESC'
+  query = QUERY_DEFAULT,
+  direction = DIRECTION_DEFAULT
 }) => {
   const directionQuery = withDirectionQuery(direction, {
     asc: OrderDirection.Asc,

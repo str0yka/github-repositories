@@ -80,6 +80,10 @@
         "newlines-between": "always",
         "pathGroups": [
           {
+            "pattern": "~pages/*",
+            "group": "parent"
+          },
+          {
             "pattern": "~*",
             "group": "internal"
           },

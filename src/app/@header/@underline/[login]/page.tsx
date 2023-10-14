@@ -1,10 +1,9 @@
 import Link from 'next/link';
 
 import { Button } from '~components/ui';
+import { withTabQuery } from '~pages/[login]/_helpers';
 import { ROUTES } from '~utils/constants';
 import { cn } from '~utils/helpers';
-
-import { withTabQuery } from '../../../[login]/_helpers';
 
 import s from './page.module.css';
 

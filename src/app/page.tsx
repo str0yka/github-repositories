@@ -1,3 +1,9 @@
-const HomePage = () => <h1>Hey</h1>;
+import { redirect } from 'next/navigation';
 
-export default HomePage;
+const Home = () => {
+  redirect('/search');
+
+  return null;
+};
+
+export default Home;

@@ -1,34 +1,38 @@
 'use client';
 
-import { useRouter, useSearchParams, useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 import { Input, SelectMenu } from '~components/ui';
-import { ROUTES } from '~utils/constants';
-import { useDebounce } from '~utils/hooks';
-
-import { withDirectionQuery } from '../../../../_helpers';
+import { MagnifierIcon } from '~components/ui/icons';
+import {
+  DIRECTIONS,
+  DIRECTION_SEARCH_PARAM_NAME,
+  QUERY_DEFAULT,
+  QUERY_SEARCH_PARAM_NAME
+} from '~pages/[login]/_constants';
+import { withDirectionQuery } from '~pages/[login]/_helpers';
+import { useDebounce, useQueryParams } from '~utils/hooks';
 
 import s from './FilterControl.module.css';
-import { DIRECTION_OPTIONS } from './constants';
+
+const DIRECTION_OPTIONS = [
+  { text: 'Descent', value: DIRECTIONS.DESCENT },
+  { text: 'Ascent', value: DIRECTIONS.ASCENT }
+];
 
 export const FilterControl = () => {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const params = useParams();
+  const [queryParams, setQueryParams] = useQueryParams();
 
-  const [query, setQuery] = useState(searchParams.get('q') ?? '');
+  const [query, setQuery] = useState(queryParams.get(QUERY_SEARCH_PARAM_NAME) ?? QUERY_DEFAULT);
   const debouncedQuery = useDebounce(query);
 
-  const direction = withDirectionQuery(searchParams.get('direction'), { asc: 'ASC', desc: 'DESC' });
-
-  const login = params.login as string;
+  const direction = withDirectionQuery(queryParams.get(DIRECTION_SEARCH_PARAM_NAME), {
+    asc: DIRECTIONS.ASCENT,
+    desc: DIRECTIONS.DESCENT
+  });
 
   useEffect(() => {
-    const newSearchParams = new URLSearchParams(searchParams);
-    newSearchParams.set('q', debouncedQuery);
-
-    router.replace(`${ROUTES.PROFILE(login)}?${newSearchParams.toString()}`, { scroll: false });
+    setQueryParams(QUERY_SEARCH_PARAM_NAME, debouncedQuery);
   }, [debouncedQuery]);
 
   return (
@@ -36,6 +40,7 @@ export const FilterControl = () => {
       <div className={s.queryControlContainer}>
         <Input
           label='Find repository'
+          leftIndicator={<MagnifierIcon />}
           value={query}
           onChange={(event) => setQuery(event.target.value)}
         />
@@ -45,14 +50,7 @@ export const FilterControl = () => {
         label='Direction'
         options={DIRECTION_OPTIONS}
         title='Select direction type'
-        onSelect={(value) => {
-          const newSearchParams = new URLSearchParams(searchParams);
-          newSearchParams.set('direction', value.toString());
-
-          router.replace(`${ROUTES.PROFILE(login)}?${newSearchParams.toString()}`, {
-            scroll: false
-          });
-        }}
+        onSelect={(value) => setQueryParams(DIRECTION_SEARCH_PARAM_NAME, value.toString())}
       />
     </div>
   );
