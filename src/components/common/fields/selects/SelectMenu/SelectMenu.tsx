@@ -41,6 +41,7 @@ export const SelectMenu: React.FC<SelectMenuProps<Option[]>> = ({
   const onSelectOption = (value: (typeof options)[number]['value']) => {
     setSelectedValue(value);
     onSelect(value);
+    setIsOpen(false);
   };
 
   return (

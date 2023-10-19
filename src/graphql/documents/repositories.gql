@@ -1,4 +1,4 @@
-query Repositories($login: String!, $first: Int!, $orderBy: RepositoryOrder!, $after: String) {
+query UserRepositories($login: String!, $first: Int!, $orderBy: RepositoryOrder!, $after: String) {
   user(login: $login) {
     repositories(first: $first, orderBy: $orderBy, after: $after) {
       nodes {

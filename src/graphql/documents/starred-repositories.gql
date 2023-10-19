@@ -1,4 +1,4 @@
-query StarredRepositories($login: String!, $first: Int!, $orderBy: StarOrder!, $after: String) {
+query UserStarredRepositories($login: String!, $first: Int!, $orderBy: StarOrder!, $after: String) {
   user(login: $login) {
     starredRepositories(first: $first, orderBy: $orderBy, after: $after) {
       edges {
